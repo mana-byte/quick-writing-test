@@ -1,4 +1,4 @@
-# Project Setup Guide
+# Quick writting test
 
 https://github.com/user-attachments/assets/1821129d-e1d2-482f-9e4f-c9c42f1624f7
 
@@ -11,7 +11,7 @@ https://github.com/user-attachments/assets/1821129d-e1d2-482f-9e4f-c9c42f1624f7
 ### Steps
 1. Clone the repository to your local machine:
    ```bash
-   git clone <repository-url>
+   git clone https://github.com/mana-byte/quick-writing-test.git
    cd devweb/back_jeu
    ```
 
