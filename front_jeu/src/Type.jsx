@@ -39,9 +39,9 @@ function Type() {
   const [isActive, setIsActive] = useState(false);
   const [isDone, setIsDone] = useState(false); // If the user has finished typing the text
 
-  // const apiKey = process.env.MISTRAL_API_KEY;
   // WARNING: REMOVE THE API KEY BEFORE PUSHING TO GITHUB
-  const client = new Mistral({ apiKey: "YOUR_API_KEY" }); // Either add it here or in env variables
+  const apiKey = process.env.MISTRAL_API_KEY ? process.env.MISTRAL_API_KEY : "API_KEY"
+  const client = new Mistral({ apiKey: apiKey }); // Either add it here or in env variables
   const [isLoading, setIsLoading] = useState(false);
 
   const chatResponse = async (setIsLoading) => {

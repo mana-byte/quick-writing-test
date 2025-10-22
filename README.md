@@ -29,6 +29,7 @@ https://github.com/user-attachments/assets/1821129d-e1d2-482f-9e4f-c9c42f1624f7
 ### Prerequisites
 
 - Node.js and npm installed.
+- A Mistral API key to put into Type.jsx or in env variables at MISTRAL_API_KEY
 
 ### Steps
 
