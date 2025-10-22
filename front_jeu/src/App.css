@@ -1,0 +1,191 @@
+@font-face {
+  font-family: 'DepartureMono Nerd Font';
+  src: url('./fonts/DepartureMonoNerdFont-Regular.otf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+body {
+  font-family: 'DepartureMono Nerd Font', monospace;
+  margin: 0;
+  padding: 0;
+}
+
+/* center button in the middle of the screen */
+.center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: black;
+  z-index: -1;
+  transition: background-color 0.3s ease;
+}
+
+.background:hover {
+  background-color: white;
+}
+
+.scoreboard {
+  align-items: center;
+  align-content: center;
+  text-align: center;
+  color: black;
+  opacity: 0;
+}
+
+.scoreboard:hover {
+  color: white;
+  opacity: 1;
+}
+
+.scoreboard-buttons {
+  color: red;
+  background-color: transparent;
+  border: none;
+}
+
+.play-button {
+  padding: 15px 30px;
+  margin-top: 0px;
+  font-size: 24px;
+  background-color: black;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 1s ease;
+  transition: color 1s ease;
+  transition: width 0.3s ease, height 0.3s ease;
+  width: 160px;
+  height: 80px;
+}
+
+.play-button:hover {
+  background-color: white;
+  color: black;
+  width: 200px;
+  height: 120px;
+  animation: jiggle 2s infinite;
+}
+
+
+.top-center {
+    position: absolute;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.typed-text {
+  font-size: 24px;
+  font-weight: bold;
+  color: #333;
+  text-align: center;
+  pointer-events: none;
+}
+
+.untyped-text {
+  font-size: 24px;
+  font-weight: normal;
+  color: #999;
+  text-align: center;
+  pointer-events: none;
+  user-select: none;
+}
+
+.chrono {
+    font-size: 18px;
+    color: #666;
+    text-align: center;
+}
+
+.invisible-form {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+/* covers all the bottom of the page */
+.invisible-input {
+    position: absolute;
+    opacity: 0;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 50px;
+}
+
+.error-text {
+    color: red;
+    font-weight: bold;
+    text-align: center;
+    margin-top: 20px;
+    pointer-events: none;
+    user-select: none;
+}
+
+.congrats-text {
+    font-size: 24px;
+    color: green;
+    text-align: center;
+    margin-top: 20px;
+    align-items: center;
+    pointer-events: none;
+    user-select: none;
+}
+
+/* centers text */
+.info-text {
+    color: grey;
+    display: flex;
+    text-align: center;
+    justify-content: center;
+}
+
+/* bouncing text animation */
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+
+.bounce {
+  animation: bounce 1s infinite;
+}
+/* blinking cursor animation */
+@keyframes blink {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0;
+    }
+}
+.blink {
+    animation: blink 0.75s infinite;
+}
+
+@keyframes jiggle {
+  0% { transform: rotate(0deg); }
+  25% { transform: rotate(3deg); }
+  50% { transform: rotate(-3deg); }
+  75% { transform: rotate(3deg); }
+  100% { transform: rotate(0deg); }
+}
+

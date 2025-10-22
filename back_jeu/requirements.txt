@@ -1,0 +1,6 @@
+pytest
+fastapi
+psycopg2-binary
+sqlalchemy
+psycopg[binary,pool]
+
