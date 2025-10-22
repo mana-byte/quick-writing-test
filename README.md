@@ -17,29 +17,9 @@ https://github.com/user-attachments/assets/1821129d-e1d2-482f-9e4f-c9c42f1624f7
     cd devweb/back_jeu
     ```
 
-2. Install Python dependencies:
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-3. Start the PostgreSQL database using Docker:
+2. Start the whole backend using Docker:
    ```bash
    docker-compose up -d
-   ```
-   This will set up a PostgreSQL database with the following environment:
-   - `POSTGRES_USER`: mana
-   - `POSTGRES_PASSWORD`: pswd
-   - `POSTGRES_DB`: pg_db
-   - Accessible on port `8898` locally.
-
-   Now we need to initialize the database
-   ```bash
-   python3 src/db/init.db.py
-   ```
-
-4. Run the FastAPI application:
-   ```bash
-   fastapi run src/backend/api.py
    ```
 
 ---

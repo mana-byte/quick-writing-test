@@ -1,0 +1,28 @@
+FROM python:3.11-slim
+
+WORKDIR /backend
+
+COPY requirements.txt .
+RUN apt-get update \
+    && apt-get install -y gcc libpq-dev \
+    && pip install --no-cache-dir -r requirements.txt \
+    && apt-get remove -y gcc libpq-dev \
+    && apt-get autoremove -y \
+    && rm -rf /var/lib/apt/lists/*
+
+# Create and use non-root user because by default docker containers run as roo
+RUN useradd -m appuser
+USER appuser
+
+COPY . .
+
+# Set environment variables
+ENV PORT=8000
+ENV PYTHONPATH=./src
+
+# Expose port
+EXPOSE 8000
+
+# Command to run FastAPI app
+CMD ["uvicorn", "backend.api:app", "--host", "0.0.0.0", "--port", "8000"]
+

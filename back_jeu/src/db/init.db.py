@@ -1,9 +1,11 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from db import Base, Performance
+import os
 
+db_url = os.environ.get("DATABASE_URL", "postgresql+psycopg2://mana:pswd@db:8878/pg_db")
 # Create a connection string
-engine = create_engine('postgresql+psycopg2://mana:pswd@localhost:8898/pg_db')
+engine = create_engine(db_url)
 
 connection = engine.connect()
 

@@ -1,6 +1,7 @@
 pytest
 fastapi
 psycopg2-binary
+uvicorn
 sqlalchemy
 psycopg[binary,pool]
 

@@ -1,10 +1,12 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from db.db import Performance
+import os
 
+db_url = os.environ.get("DATABASE_URL", "postgresql+psycopg2://mana:pswd@db:8878/pg_db")
 
 def get_db():
-    engine = create_engine("postgresql+psycopg2://mana:pswd@localhost:8898/pg_db")
+    engine = create_engine(db_url)
     Session = sessionmaker(bind=engine)
     session = Session()
     try:

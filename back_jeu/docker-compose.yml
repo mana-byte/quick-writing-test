@@ -1,0 +1,41 @@
+services:
+
+  initdb:
+    image: python:3.11
+    container_name: backjeu_initdb
+    depends_on:
+      - db # Don't forget this line
+    working_dir: /src/db
+    volumes:
+      - ./src/db:/src/db   # mount the entire db folder
+    environment:
+      DATABASE_URL: postgresql://mana:pswd@db:5432/pg_db
+    command: >
+      sh -c "pip install psycopg2-binary sqlalchemy && python init.db.py"
+    restart: "no"
+
+  db: # No ports  = container no reachable for host machine
+    image: postgres:17
+    container_name: backjeu_db
+    environment: # runs by default on 5432
+      POSTGRES_USER: mana
+      POSTGRES_PASSWORD: pswd
+      POSTGRES_DB: pg_db
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    restart: always
+
+  web:
+    build: .
+    depends_on:
+      - db
+    environment:
+      - DATABASE_URL=postgresql://mana:pswd@db:5432/pg_db
+    ports:
+      - "8000:8000"
+    restart: always
+
+
+volumes:
+  db_data:
+
