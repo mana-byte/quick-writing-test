@@ -2,6 +2,7 @@
 # WARNING: In this the traces and metrics are not stored if the container is rebuild so please mount a volume or use a db
 
 services:
+      # NOTE: OTEL COLLECTOR
   otel-collector:
     image: otel/opentelemetry-collector-contrib:latest
     command: ["--config=/etc/otel-collector-config.yaml"]
@@ -16,7 +17,9 @@ services:
     depends_on:
       - zipkin
       - prometheus
+      - loki
 
+      # NOTE: TRACES
   zipkin:
     image: openzipkin/zipkin:2.27
     ports:
@@ -24,6 +27,7 @@ services:
     networks:
       - my-otel-network
 
+      # NOTE: METRICS
   prometheus:
     image: prom/prometheus:latest
     volumes:
@@ -33,6 +37,7 @@ services:
     networks:
       - my-otel-network
 
+      # NOTE: VISUALISATION
   grafana:
     image: grafana/grafana:latest
     ports:
@@ -42,6 +47,17 @@ services:
     depends_on:
       - prometheus
       - otel-collector
+      - loki
+      - zipkin
+
+      # NOTE: LOGS
+  loki:
+    image: grafana/loki:latest
+    ports:
+      - "3100:3100"
+    networks:
+      - my-otel-network
+    command: -config.file=/etc/loki/local-config.yaml
 
 networks:
   my-otel-network:

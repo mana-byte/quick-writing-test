@@ -16,10 +16,12 @@ receivers:
 exporters:
   zipkin:
     endpoint: "http://zipkin:9411/api/v2/spans"
-
   prometheus:
     endpoint: 0.0.0.0:8889
-
+  otlphttp:
+    endpoint: "http://loki:3100/otlp"
+    tls:
+      insecure: true
 processors:
   batch:
 
@@ -29,9 +31,11 @@ service:
       receivers: [otlp]
       processors: [batch]
       exporters: [zipkin]
-
     metrics:
       receivers: [otlp, prometheus]
       processors: [batch]
       exporters: [prometheus]
+    logs:
+      receivers: [otlp]
+      exporters: [otlphttp]
 
