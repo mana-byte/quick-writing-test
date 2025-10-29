@@ -49,10 +49,12 @@
             source .venv/bin/activate
             pip install --upgrade pip
             pip install pytest fastapi
+            pip install uvicorn
             pip install "fastapi[standard]"
             pip install "psycopg[binary,pool]"
             pip install sqlalchemy
             pip install psycopg2-binary
+            pip install opentelemetry-api opentelemetry-sdk opentelemetry-exporter-otlp-proto-grpc opentelemetry-instrumentation-fastapi opentelemetry-instrumentation-httpx
           else
             source .venv/bin/activate
           fi

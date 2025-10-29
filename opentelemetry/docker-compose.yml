@@ -1,0 +1,49 @@
+version: "3.9"
+
+services:
+  otel-collector:
+    image: otel/opentelemetry-collector-contrib:latest
+    command: ["--config=/etc/otel-collector-config.yaml"]
+    volumes:
+      - ./otel-collector-config.yaml:/etc/otel-collector-config.yaml
+    ports:
+      - "4317:4317"   # OTLP gRPC receiver
+      - "4318:4318"   # OTLP HTTP receiver
+      - "8889:8888"   # Prometheus metrics endpoint
+    networks:
+      - my-otel-network
+    depends_on:
+      - zipkin
+      - prometheus
+
+  zipkin:
+    image: openzipkin/zipkin:2.27
+    ports:
+      - "9411:9411"   # Zipkin UI & API
+    networks:
+      - my-otel-network
+
+  prometheus:
+    image: prom/prometheus:latest
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - "9090:9090"   # Prometheus UI & API
+    networks:
+      - my-otel-network
+
+  grafana:
+    image: grafana/grafana:latest
+    ports:
+      - "3000:3000"   # Grafana UI
+    networks:
+      - my-otel-network
+    depends_on:
+      - prometheus
+      - otel-collector
+
+networks:
+  my-otel-network:
+    driver: bridge
+    external: true
+

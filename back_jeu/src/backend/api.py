@@ -12,8 +12,26 @@ from db.app import (
     remove_performance,
     update_performance,
 )
+from opentelemetry import trace
+from opentelemetry.sdk.trace import TracerProvider
+from opentelemetry.sdk.trace.export import BatchSpanProcessor
+from opentelemetry.exporter.otlp.proto.grpc.trace_exporter import OTLPSpanExporter
+from opentelemetry.instrumentation.fastapi import FastAPIInstrumentor
+
+
+provider = TracerProvider() # Set up OpenTelemetry Tracer Provider
+processor = BatchSpanProcessor(OTLPSpanExporter(
+    endpoint="otel-collector:4317",
+    insecure=True,
+)) # Set up Span Processor with OTLP Exporter
+provider.add_span_processor(processor) # Add Span Processor to Provider
+trace.set_tracer_provider(provider) # Set the global Tracer Provider
+
+tracer = trace.get_tracer(__name__)
 
 app = FastAPI()
+
+FastAPIInstrumentor.instrument_app(app, tracer_provider=provider) # Instrument FastAPI app with OpenTelemetry
 
 app.add_middleware(
     CORSMiddleware,
@@ -23,6 +41,10 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+@app.get("/debug_trace")
+async def debug_trace():
+    with tracer.start_as_current_span("debug-span"):
+        return {"message": "Tracing works!"}
 
 @app.get("/api/all_performance")
 async def get_all_performance():
@@ -106,3 +128,4 @@ async def update_Performance(performance_id: int, content: addPerformanceRequest
         return JSONResponse(
             content={"message": "Performance not found"}, status_code=404
         )
+
