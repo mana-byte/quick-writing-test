@@ -1,4 +1,5 @@
-version: "3.9"
+# NOTE: This is a telemetry docker compose example
+# WARNING: In this the traces and metrics are not stored if the container is rebuild so please mount a volume or use a db
 
 services:
   otel-collector:

@@ -18,21 +18,41 @@ from opentelemetry.sdk.trace.export import BatchSpanProcessor
 from opentelemetry.exporter.otlp.proto.grpc.trace_exporter import OTLPSpanExporter
 from opentelemetry.instrumentation.fastapi import FastAPIInstrumentor
 
+from opentelemetry.sdk.metrics import MeterProvider
+from opentelemetry.sdk.metrics.export import PeriodicExportingMetricReader
+from opentelemetry.exporter.otlp.proto.grpc.metric_exporter import OTLPMetricExporter
+from opentelemetry import metrics
 
-provider = TracerProvider() # Set up OpenTelemetry Tracer Provider
-processor = BatchSpanProcessor(OTLPSpanExporter(
+# NOTE: TRACES
+provider = TracerProvider()
+trace_exporter = OTLPSpanExporter(
     endpoint="otel-collector:4317",
     insecure=True,
-)) # Set up Span Processor with OTLP Exporter
-provider.add_span_processor(processor) # Add Span Processor to Provider
-trace.set_tracer_provider(provider) # Set the global Tracer Provider
+)
+span_exporter = BatchSpanProcessor(trace_exporter)
+provider.add_span_processor(span_exporter) 
+trace.set_tracer_provider(provider) 
 
 tracer = trace.get_tracer(__name__)
 
+# NOTE: METRICS
+metric_exporter = OTLPMetricExporter(
+    endpoint="otel-collector:4317",
+    insecure=True,
+)
+reader = PeriodicExportingMetricReader(metric_exporter)
+
+provider_metrics = MeterProvider(metric_readers=[reader])
+metrics.set_meter_provider(provider_metrics)
+
+# Create a meter
+meter = metrics.get_meter(__name__)
+
 app = FastAPI()
 
-FastAPIInstrumentor.instrument_app(app, tracer_provider=provider) # Instrument FastAPI app with OpenTelemetry
+FastAPIInstrumentor.instrument_app(app)
 
+# NOTE: APP
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["http://localhost:5173"],
