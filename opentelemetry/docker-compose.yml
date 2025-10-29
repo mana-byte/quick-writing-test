@@ -11,7 +11,7 @@ services:
     ports:
       - "4317:4317"   # OTLP gRPC receiver
       - "4318:4318"   # OTLP HTTP receiver
-      - "8889:8888"   # Prometheus metrics endpoint
+      - "8889:8889"   # Prometheus metrics endpoint
     networks:
       - my-otel-network
     depends_on:

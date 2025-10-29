@@ -12,26 +12,37 @@ from db.app import (
     remove_performance,
     update_performance,
 )
+
+# NOTE: TRACE IMPORT
 from opentelemetry import trace
 from opentelemetry.sdk.trace import TracerProvider
 from opentelemetry.sdk.trace.export import BatchSpanProcessor
 from opentelemetry.exporter.otlp.proto.grpc.trace_exporter import OTLPSpanExporter
 from opentelemetry.instrumentation.fastapi import FastAPIInstrumentor
 
+# NOTE: METRICS IMPORT
+from opentelemetry import metrics
 from opentelemetry.sdk.metrics import MeterProvider
 from opentelemetry.sdk.metrics.export import PeriodicExportingMetricReader
 from opentelemetry.exporter.otlp.proto.grpc.metric_exporter import OTLPMetricExporter
-from opentelemetry import metrics
+from opentelemetry.instrumentation.system_metrics import SystemMetricsInstrumentor
+
+# NOTE: LOGS IMPORT
+# import logging
+# from opentelemetry import logs
+# from opentelemetry.sdk.logs import LoggerProvider, LoggingHandler
+# from opentelemetry.sdk.logs.export import BatchLogRecordProcessor
+# from opentelemetry.exporter.otlp.proto.grpc.log_exporter import OTLPLogExporter
 
 # NOTE: TRACES
-provider = TracerProvider()
+provider_trace = TracerProvider()
 trace_exporter = OTLPSpanExporter(
     endpoint="otel-collector:4317",
     insecure=True,
 )
 span_exporter = BatchSpanProcessor(trace_exporter)
-provider.add_span_processor(span_exporter) 
-trace.set_tracer_provider(provider) 
+provider_trace.add_span_processor(span_exporter)
+trace.set_tracer_provider(provider_trace)
 
 tracer = trace.get_tracer(__name__)
 
@@ -45,10 +56,19 @@ reader = PeriodicExportingMetricReader(metric_exporter)
 provider_metrics = MeterProvider(metric_readers=[reader])
 metrics.set_meter_provider(provider_metrics)
 
-# Create a meter
-meter = metrics.get_meter(__name__)
+SystemMetricsInstrumentor().instrument(meter_provider=provider_metrics)
 
 app = FastAPI()
+
+# NOTE: LOGS
+# log_exporter = OTLPLogExporter(endpoint="otel-collector:4317", insecure=True)
+# provider_logs = LoggerProvider()
+# provider_logs.add_log_record_processor(BatchLogRecordProcessor(log_exporter))
+# logs.set_logger_provider(provider_logs)
+#
+# handler = LoggingHandler(level=logging.INFO)
+# logging.getLogger().addHandler(handler)
+# logging.getLogger().setLevel(logging.INFO)
 
 FastAPIInstrumentor.instrument_app(app)
 
@@ -61,10 +81,12 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
 @app.get("/debug_trace")
 async def debug_trace():
     with tracer.start_as_current_span("debug-span"):
         return {"message": "Tracing works!"}
+
 
 @app.get("/api/all_performance")
 async def get_all_performance():
@@ -148,4 +170,3 @@ async def update_Performance(performance_id: int, content: addPerformanceRequest
         return JSONResponse(
             content={"message": "Performance not found"}, status_code=404
         )
-
