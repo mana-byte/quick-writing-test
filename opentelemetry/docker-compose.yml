@@ -2,16 +2,16 @@
 # WARNING: In this the traces and metrics are not stored if the container is rebuild so please mount a volume or use a db
 
 services:
-      # NOTE: OTEL COLLECTOR
+  # NOTE: OTEL COLLECTOR
   otel-collector:
     image: otel/opentelemetry-collector-contrib:latest
     command: ["--config=/etc/otel-collector-config.yaml"]
     volumes:
       - ./otel-collector-config.yaml:/etc/otel-collector-config.yaml
     ports:
-      - "4317:4317"   # OTLP gRPC receiver
-      - "4318:4318"   # OTLP HTTP receiver
-      - "8889:8889"   # Prometheus metrics endpoint
+      - "4317:4317" # OTLP gRPC receiver
+      - "4318:4318" # OTLP HTTP receiver
+      - "8889:8889" # Prometheus metrics endpoint
     networks:
       - my-otel-network
     depends_on:
@@ -23,7 +23,7 @@ services:
   tempo:
     image: grafana/tempo:latest
     ports:
-      - "3200:3200"   # Tempo gRPC/HTTP endpoint
+      - "3200:3200" # Tempo gRPC/HTTP endpoint
       - "3199:3199"
     networks:
       - my-otel-network
@@ -37,15 +37,16 @@ services:
     volumes:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml
     ports:
-      - "9090:9090"   # Prometheus UI & API
+      - "9090:9090" # Prometheus UI & API
     networks:
       - my-otel-network
+    
 
       # NOTE: VISUALISATION
   grafana:
     image: grafana/grafana:latest
     ports:
-      - "3000:3000"   # Grafana UI
+      - "3000:3000" # Grafana UI
     networks:
       - my-otel-network
     depends_on:
@@ -67,4 +68,3 @@ networks:
   my-otel-network:
     driver: bridge
     external: true
-

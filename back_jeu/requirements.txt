@@ -3,6 +3,7 @@ fastapi
 psycopg2-binary
 uvicorn
 sqlalchemy
+httpx
 psycopg[binary,pool]
 
 # OpenTelemetry packages

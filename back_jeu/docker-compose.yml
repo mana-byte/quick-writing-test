@@ -1,7 +1,7 @@
 services:
 
   initdb:
-    image: python:3.11
+    image: python:3.11-slim
     container_name: backjeu_initdb
     depends_on:
       - db # Don't forget this line

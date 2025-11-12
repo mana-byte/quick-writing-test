@@ -40,9 +40,11 @@
           pythonWithPackages
           black
           postgresql
+          gcc-unwrapped
         ];
 
         shellHook = ''
+          export LD_LIBRARY_PATH=${pkgs.gcc-unwrapped.lib}/lib:$LD_LIBRARY_PATH
           if [ ! -d .venv ]; then
             echo "Creating virtualenv with ultralytics ..."
             ${python.interpreter} -m venv .venv
