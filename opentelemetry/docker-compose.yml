@@ -63,6 +63,7 @@ services:
       - my-otel-network
     command: -config.file=/etc/loki/local-config.yaml
 
+    # NOTE: LOGS backend
   promtail:
     image: grafana/promtail:latest
     command: -config.file=/etc/promtail/config.yaml
