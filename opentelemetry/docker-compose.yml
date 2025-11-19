@@ -40,7 +40,6 @@ services:
       - "9090:9090" # Prometheus UI & API
     networks:
       - my-otel-network
-    
 
       # NOTE: VISUALISATION
   grafana:
@@ -63,6 +62,18 @@ services:
     networks:
       - my-otel-network
     command: -config.file=/etc/loki/local-config.yaml
+
+  promtail:
+    image: grafana/promtail:latest
+    command: -config.file=/etc/promtail/config.yaml
+    volumes:
+      - ./promtail-config.yaml:/etc/promtail/config.yaml
+      - /var/log:/var/log # host logs
+      - /var/run/docker.sock:/var/run/docker.sock # optional for Docker logs
+    networks:
+      - my-otel-network
+    depends_on:
+      - loki
 
 networks:
   my-otel-network:

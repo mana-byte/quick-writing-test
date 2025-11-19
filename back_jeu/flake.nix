@@ -56,7 +56,7 @@
             pip install "psycopg[binary,pool]"
             pip install sqlalchemy
             pip install psycopg2-binary
-            pip install opentelemetry-api opentelemetry-sdk opentelemetry-exporter-otlp-proto-grpc opentelemetry-instrumentation-fastapi opentelemetry-instrumentation-httpx opentelemetry-instrumentation-system-metrics
+            pip install opentelemetry-api opentelemetry-sdk opentelemetry-exporter-otlp-proto-grpc opentelemetry-instrumentation-fastapi opentelemetry-instrumentation-httpx opentelemetry-instrumentation-system-metrics opentelemetry-instrumentation-logging
           else
             source .venv/bin/activate
           fi

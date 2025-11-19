@@ -27,11 +27,10 @@ from opentelemetry.exporter.otlp.proto.grpc.metric_exporter import OTLPMetricExp
 from opentelemetry.instrumentation.system_metrics import SystemMetricsInstrumentor
 
 # NOTE: LOGS IMPORT
-# import logging
-# from opentelemetry import logs
-# from opentelemetry.sdk.logs import LoggerProvider, LoggingHandler
-# from opentelemetry.sdk.logs.export import BatchLogRecordProcessor
-# from opentelemetry.exporter.otlp.proto.grpc.log_exporter import OTLPLogExporter
+import logging
+from opentelemetry.sdk._logs import LoggerProvider, LoggingHandler
+from opentelemetry.sdk._logs.export import BatchLogRecordProcessor
+from opentelemetry.exporter.otlp.proto.grpc._log_exporter import OTLPLogExporter
 
 # NOTE: TRACES
 provider_trace = TracerProvider()
@@ -60,14 +59,13 @@ SystemMetricsInstrumentor().instrument(meter_provider=provider_metrics)
 app = FastAPI()
 
 # NOTE: LOGS
-# log_exporter = OTLPLogExporter(endpoint="otel-collector:4317", insecure=True)
-# provider_logs = LoggerProvider()
-# provider_logs.add_log_record_processor(BatchLogRecordProcessor(log_exporter))
-# logs.set_logger_provider(provider_logs)
-#
-# handler = LoggingHandler(level=logging.INFO)
-# logging.getLogger().addHandler(handler)
-# logging.getLogger().setLevel(logging.INFO)
+log_exporter = OTLPLogExporter(endpoint="otel-collector:4317", insecure=True)
+provider_logs = LoggerProvider()
+provider_logs.add_log_record_processor(BatchLogRecordProcessor(log_exporter))
+
+logging_handler = LoggingHandler(level=logging.INFO, logger_provider=provider_logs)
+logging.getLogger().addHandler(logging_handler)
+logging.getLogger().setLevel(logging.INFO)
 
 FastAPIInstrumentor.instrument_app(app)
 
@@ -101,7 +99,7 @@ async def get_all_performance():
 @app.get("/api/scoreboard")
 async def get_scoreboard():
     result = get_performances()
-    sorted_result = sorted(result, key=lambda x: x.time_taken)[:10]
+    sorted_result = sorted(result, key=lambda x: r.time_taken)[:10]
     return JSONResponse(
         content=[
             {"id": r.id, "name": r.name, "time_taken": r.time_taken}
