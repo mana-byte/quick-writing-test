@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import DisplayTyped from "./DisplayTyped.jsx";
 import Chrono from "./Chrono.jsx";
-import { Mistral } from "@mistralai/mistralai";
 import FormPerformance from "./FormPerformance.jsx";
 
 let keyStrokes = 0;
@@ -40,22 +39,14 @@ function Type() {
   const [isDone, setIsDone] = useState(false); // If the user has finished typing the text
 
   // WARNING: REMOVE THE API KEY BEFORE PUSHING TO GITHUB
-  const apiKey = process.env.MISTRAL_API_KEY ? process.env.MISTRAL_API_KEY : "API_KEY"
-  const client = new Mistral({ apiKey: apiKey }); // Either add it here or in env variables
   const [isLoading, setIsLoading] = useState(false);
 
   const chatResponse = async (setIsLoading) => {
     setIsLoading(true);
-    const response = await client.chat.complete({
-      model: "mistral-tiny",
-      messages: [
-        {
-          role: "user",
-          content:
-            "This is for a writing speed test. Write a short text about a random educative topic. I want only the text, not title or summary or anything else. The text must be around 20 characters long. Also no special characters, only basic punctuation like commas and periods.",
-        },
-      ],
-    });
+    const response = await fetch(
+      "http://localhost:8000/api/generate_sentence",
+    ).then((res) => res.json());
+    console.log(response);
     setIsLoading(false);
     return response;
   };

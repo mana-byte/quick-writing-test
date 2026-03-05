@@ -37,6 +37,8 @@ services:
       dockerfile: dockerfile
     depends_on:
       - db
+    secrets:
+      - api_key
     environment:
       - DATABASE_URL=postgresql://mana:pswd@db:5432/pg_db
       - OTEL_LOG_LEVEL=debug
@@ -63,6 +65,10 @@ services:
     networks:
       - my-otel-network
     restart: always
+
+secrets:
+  api_key:
+    file: secrets/api_key.txt
 
 volumes:
   db_data:
