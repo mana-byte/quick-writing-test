@@ -1,0 +1,27 @@
+name: deploy
+on: push
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+    - name: set up ssh
+      run: |
+        sudo apt-get update && sudo apt-get install -y openssh-client
+        eval $(ssh-agent -s)
+        echo "${{ secrets.SSH_KEY }}" | tr -d '\r' | ssh-add -
+        mkdir -p ~/.ssh
+        chmod 700 ~/.ssh
+        ssh-keyscan -H ${{ secrets.TARGET_SERVER_IP }} >> ~/.ssh/known_hosts
+    - name: Deploy to server
+      run: |
+        ssh -o StrictHostKeyChecking=accept-new admin@${{ secrets.TARGET_SERVER_IP }} << 'ENDSSH'
+        git clone https://github.com/mana-byte/quick-writing-test
+        cd devweb
+        docker rm -f frontend || true
+        docker rm -f web || true
+        docker rm -f db || true
+        echo ${{ secrets.API_KEY_MISTRAL }} > secrets/api_key.txt
+        docker compose up -d
+        ENDSSH
