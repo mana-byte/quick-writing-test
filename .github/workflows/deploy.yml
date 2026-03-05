@@ -22,6 +22,5 @@ jobs:
         docker rm -f frontend || true
         docker rm -f web || true
         docker rm -f db || true
-        echo ${{ secrets.API_KEY_MISTRAL }} > secrets/api_key.txt
         docker compose up -d
         ENDSSH
