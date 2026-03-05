@@ -4,7 +4,7 @@ services:
   # Backend services
   initdb:
     image: python:3.11-slim
-    container_name: backjeu_initdb
+    container_name: manabyte/quickwriting_initdb
     depends_on:
       - db
     working_dir: /src/db
@@ -32,6 +32,7 @@ services:
     restart: always
 
   web:
+    image: manabyte/quickwriting_back:latest
     build:
       context: ./back_jeu
       dockerfile: dockerfile
@@ -50,6 +51,7 @@ services:
 
   # Frontend service
   frontend:
+    image: manabyte/quickwriting_front:latest
     build:
       context: ./front_jeu
       dockerfile: dockerfile

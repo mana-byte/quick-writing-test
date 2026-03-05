@@ -1,5 +1,8 @@
 name: deploy
-on: push
+
+on:
+  workflow_dispatch:
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -22,8 +25,7 @@ jobs:
           cd $REPO_DIR && git pull --force
         fi
         # Setup
-        cd $REPO_DIR
-        cd quick-writing-test
+        cd $REPO_DIR || true
         docker swarm init || true
         docker secret rm api_key || true
         echo "${{ secrets.API_KEY }}" | docker secret create api_key -
