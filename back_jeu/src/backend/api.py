@@ -72,7 +72,7 @@ FastAPIInstrumentor.instrument_app(app)
 # NOTE: APP
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"],
+    allow_origins=["http://localhost:5173", "http://frontend:5173"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -99,7 +99,7 @@ async def get_all_performance():
 @app.get("/api/scoreboard")
 async def get_scoreboard():
     result = get_performances()
-    sorted_result = sorted(result, key=lambda x: r.time_taken)[:10]
+    sorted_result = sorted(result, key=lambda r: r.time_taken)[:10]
     return JSONResponse(
         content=[
             {"id": r.id, "name": r.name, "time_taken": r.time_taken}
