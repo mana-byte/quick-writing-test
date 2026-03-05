@@ -6,6 +6,7 @@ sqlalchemy
 httpx
 psycopg[binary,pool]
 opentelemetry-exporter-otlp-proto-grpc
+mistralai
 
 # OpenTelemetry packages
 opentelemetry-api 

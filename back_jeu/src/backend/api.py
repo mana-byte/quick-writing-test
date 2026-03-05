@@ -1,5 +1,6 @@
 from operator import ge
 from pathlib import Path
+from mistralai import Mistral
 from fastapi import FastAPI
 from fastapi.responses import JSONResponse
 from fastapi.staticfiles import StaticFiles
@@ -156,3 +157,27 @@ async def update_Performance(performance_id: int, content: addPerformanceRequest
         return JSONResponse(
             content={"message": "Performance not found"}, status_code=404
         )
+
+
+@app.get("/api/generate_sentence")
+async def generate_sentence():
+    with open("/run/secrets/api_key", "r") as f:
+        api_key = f.read().strip()
+        with Mistral(
+            api_key=api_key,
+        ) as mistral:
+            res = mistral.chat.complete(
+                model="mistral-tiny",
+                messages=[
+                    {
+                        "role": "user",
+                        "content": "This is for a writing speed test. Write a short text about a random educative topic. I want only the text, not title or summary or anything else. The text must be around 20 characters long. Also no special characters, only basic punctuation like commas and periods.",
+                    },
+                ],
+                stream=False,
+                response_format={
+                    "type": "text",
+                },
+            )
+            logging.info(res)
+            return res
