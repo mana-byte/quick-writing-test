@@ -179,5 +179,4 @@ async def generate_sentence():
                     "type": "text",
                 },
             )
-            logging.info(res)
             return res

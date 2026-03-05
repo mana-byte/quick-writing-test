@@ -68,7 +68,8 @@ services:
 
 secrets:
   api_key:
-    file: secrets/api_key.txt
+    # file: secrets/api_key.txt
+    external: true
 
 volumes:
   db_data:

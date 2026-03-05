@@ -46,7 +46,6 @@ function Type() {
     const response = await fetch(
       "http://localhost:8000/api/generate_sentence",
     ).then((res) => res.json());
-    console.log(response);
     setIsLoading(false);
     return response;
   };
