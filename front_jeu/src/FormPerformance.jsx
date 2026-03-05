@@ -1,10 +1,12 @@
 import { useState, useEffect } from "react";
 import DisplayTyped from "./DisplayTyped";
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 async function handleSubmit(name_, time_taken_) {
 	try {
     console.log("works !!!");
-		const response = await fetch("http://localhost:8000/api/add_performance", {
+		const response = await fetch(`${API_URL}/api/add_performance`, {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",

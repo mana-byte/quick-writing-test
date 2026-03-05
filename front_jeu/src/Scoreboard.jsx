@@ -3,9 +3,11 @@ import TypeWritter from "./TypeWritter";
 import ModalForm from "./ModalForm";
 import { useState, useEffect } from "react";
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 function handleDelete(entry) {
   try {
-    const rep = fetch(`http://localhost:8000/api/remove_performance/${entry.id}`, {
+    const rep = fetch(`${API_URL}/api/remove_performance/${entry.id}`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",

@@ -39,12 +39,13 @@ function Type() {
   const [isDone, setIsDone] = useState(false); // If the user has finished typing the text
 
   // WARNING: REMOVE THE API KEY BEFORE PUSHING TO GITHUB
+  const API_URL = import.meta.env.VITE_API_URL;
   const [isLoading, setIsLoading] = useState(false);
 
   const chatResponse = async (setIsLoading) => {
     setIsLoading(true);
     const response = await fetch(
-      "http://localhost:8000/api/generate_sentence",
+      `${API_URL}/api/generate_sentence`,
     ).then((res) => res.json());
     setIsLoading(false);
     return response;

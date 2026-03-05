@@ -3,9 +3,11 @@ import "./App.css";
 import Type from "./Type";
 import Scoreboard from "./Scoreboard.jsx";
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 async function fetchScoreBoard() {
 	try {
-		const rep = await fetch("http://localhost:8000/api/scoreboard").then(
+		const rep = await fetch(`${API_URL}/api/scoreboard`).then(
 			(res) => res.json(),
 		);
 		return rep;

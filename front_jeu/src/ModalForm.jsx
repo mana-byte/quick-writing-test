@@ -2,6 +2,8 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import Modal from 'react-modal';
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 const customStyles = {
   content: {
     top: '50%',
@@ -15,7 +17,7 @@ const customStyles = {
 
 function handleModify(entry) {
   try {
-    const rep = fetch(`http://localhost:8000/api/update_performance/${entry.id}`, {
+    const rep = fetch(`${API_URL}/api/update_performance/${entry.id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
