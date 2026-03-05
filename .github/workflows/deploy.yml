@@ -16,9 +16,7 @@ jobs:
       run: |
         ssh -v -o StrictHostKeyChecking=accept-new admin@${{ secrets.TARGET_SERVER_IP }} << 'ENDSSH'
         git clone https://github.com/mana-byte/quick-writing-test
-        cd devweb
-        docker rm -f frontend || true
-        docker rm -f web || true
-        docker rm -f db || true
+        cd quick-writing-test
+        docker compose down || true
         docker compose up -d
         ENDSSH
