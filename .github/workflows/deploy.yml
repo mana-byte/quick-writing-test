@@ -15,8 +15,18 @@ jobs:
     - name: Deploy to server
       run: |
         ssh -v -o StrictHostKeyChecking=accept-new admin@${{ secrets.TARGET_SERVER_IP }} << 'ENDSSH'
-        git clone https://github.com/mana-byte/quick-writing-test
+        REPO_DIR=~/quick-writing-test
+        if [ ! -d "$REPO_DIR" ]; then
+          git clone https://github.com/mana-byte/quick-writing-test
+        else
+          cd $REPO_DIR && git pull --force
+        fi
+        # Setup
+        cd $REPO_DIR
         cd quick-writing-test
-        docker compose down || true
-        docker compose up -d
+        docker swarm init || true
+        docker secret rm api_key || true
+        echo "${{ secrets.API_KEY }}" | docker secret create api_key -
+        docker stack rm quick_writing_test || true
+        docker stack deploy -c docker-compose.yml quick_writing_test
         ENDSSH
