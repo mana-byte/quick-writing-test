@@ -1,0 +1,73 @@
+version: '3.8'
+
+services:
+  # Backend services
+  initdb:
+    image: python:3.11-slim
+    container_name: backjeu_initdb
+    depends_on:
+      - db
+    working_dir: /src/db
+    volumes:
+      - ./back_jeu/src/db:/src/db
+    environment:
+      DATABASE_URL: postgresql://mana:pswd@db:5432/pg_db
+    command: >
+      sh -c "pip install psycopg2-binary sqlalchemy && python init.db.py"
+    networks:
+      - my-otel-network
+    restart: "no"
+
+  db:
+    image: postgres:17
+    container_name: backjeu_db
+    environment:
+      POSTGRES_USER: mana
+      POSTGRES_PASSWORD: pswd
+      POSTGRES_DB: pg_db
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    networks:
+      - my-otel-network
+    restart: always
+
+  web:
+    build:
+      context: ./back_jeu
+      dockerfile: dockerfile
+    depends_on:
+      - db
+    environment:
+      - DATABASE_URL=postgresql://mana:pswd@db:5432/pg_db
+      - OTEL_LOG_LEVEL=debug
+    ports:
+      - "8000:8000"
+    networks:
+      - my-otel-network
+    restart: always
+
+  # Frontend service
+  frontend:
+    build:
+      context: ./front_jeu
+      dockerfile: dockerfile
+    ports:
+      - "5173:5173"
+    depends_on:
+      - web
+    environment:
+      - NODE_ENV=development
+    volumes:
+      - ./front_jeu:/app
+      - /app/node_modules
+    networks:
+      - my-otel-network
+    restart: always
+
+volumes:
+  db_data:
+
+networks:
+  my-otel-network:
+    driver: bridge
+    external: true
