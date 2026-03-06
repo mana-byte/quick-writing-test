@@ -33,7 +33,6 @@ jobs:
     - name: Deploy to server
       run: |
         ssh -v -o StrictHostKeyChecking=accept-new admin@${{ secrets.TARGET_SERVER_IP }} << 'ENDSSH'
-        set -e
         REPO_DIR=~/quick-writing-test
         if [ ! -d "$REPO_DIR" ]; then
           git clone https://github.com/mana-byte/quick-writing-test
