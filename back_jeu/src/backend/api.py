@@ -83,7 +83,7 @@ app.add_middleware(
 @app.get("/debug_trace")
 async def debug_trace():
     with tracer.start_as_current_span("debug-span"):
-        return {"message": "Tracing works!"}
+        return {"message": "Tracing works! {je suis un mechant bug}"}
 
 
 @app.get("/api/all_performance")
